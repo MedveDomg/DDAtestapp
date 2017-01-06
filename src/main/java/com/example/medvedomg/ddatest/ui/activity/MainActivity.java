@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject
     DbModule dbModule;
+    private List<Student> students;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +47,16 @@ public class MainActivity extends AppCompatActivity {
                 .appComponent(((App) getApplicationContext()).getAppComponent())
                 .build()
                 .inject(this);
+//        while (students == null) {
+//            students = studentManager.getRealStudentList();
+//        }
+//        if (students.size() != 0) {
+//
+//        } else {
+//            Log.d(TAG, "finish");
+//            Log.d(TAG, "finish");
+//        }
 
-        List<Student> students = studentManager.getStudentList();
-
-        SQLiteDatabase db = dbModule.getWritableDatabase();
-        dbModule.insertAllData(students,db);
     }
 
 

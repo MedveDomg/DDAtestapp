@@ -26,7 +26,7 @@ public class DbModule extends SQLiteOpenHelper{
     private static final String DB_NAME = "TestDb";
     private static final int DB_VERSION = 1;
     private static final String DB_TABLE_MAIN = "testtab";
-    private static final String DB_TABLE_COURSE = "testtab_course";
+    private static final String DB_TABLE_COURSE = "testtabcourse";
 
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_CUSTOM_ID = "customid";
@@ -39,7 +39,8 @@ public class DbModule extends SQLiteOpenHelper{
 
     private static final String DB_CREATE_MAIN_TABLE =
             "create table " + DB_TABLE_MAIN + "(" +
-                    COLUMN_ID + " integer primary key, " +
+                    COLUMN_ID + " integer primary key autoincrement, " +
+                    COLUMN_CUSTOM_ID + " integer, " +
                     COLUMN_FIRST_NAME + " text, " +
                     COLUMN_LAST_NAME + " text, " +
                     COLUMN_BIRTHDAY + " integer," +
@@ -65,7 +66,7 @@ public class DbModule extends SQLiteOpenHelper{
     private ContentValues cv = new ContentValues();
 
     private byte[] data;
-    private ContentValues cv1;
+    private ContentValues cv1 = new ContentValues();
 
     public DbModule(Context mContext) {
 
@@ -94,21 +95,22 @@ public class DbModule extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase database, int i, int i1) {
     }
 
-    public void insertAllData(List<Student> studentList, SQLiteDatabase db) {
+    public void insertAllData(List<Student> studentList) {
         cv.clear();
-        Log.d(TAG, "studentList.size() + " + studentList.size());
-        studentList.size();
+//        Log.d(TAG, "studentList.size() + " + studentList.size());
+//        studentList.size();
+        SQLiteDatabase db = this.getWritableDatabase();
         for (Student student : studentList) {
             cv.put(COLUMN_CUSTOM_ID, student.getId());
             cv.put(COLUMN_FIRST_NAME, student.getFirstName());
             cv.put(COLUMN_LAST_NAME, student.getLastName());
             cv.put(COLUMN_BIRTHDAY, student.getBirthday());
-            db.insert(DB_CREATE_MAIN_TABLE, null, cv);
+            db.insert(DB_TABLE_MAIN, null, cv);
             cv.clear();
             for (int i = 0; i < student.getCourses().size(); i++) {
-                cv.put(COLUMN_COURSE_NAME, student.getCourses().get(i).getName());
-                cv.put(COLUMN_MARK, student.getCourses().get(i).getMark());
-                db.insert(DB_CREATE_COURSE_TABLE, null, cv);
+                cv1.put(COLUMN_COURSE_NAME, student.getCourses().get(i).getName());
+                cv1.put(COLUMN_MARK, student.getCourses().get(i).getMark());
+                db.insert(DB_TABLE_COURSE, null, cv1);
             }
             Log.d(TAG, "inserted");
         }

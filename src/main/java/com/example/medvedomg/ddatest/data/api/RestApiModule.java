@@ -2,6 +2,7 @@ package com.example.medvedomg.ddatest.data.api;
 
 import android.app.Application;
 
+import com.example.medvedomg.ddatest.data.db.DbModule;
 import com.example.medvedomg.ddatest.data.model.Student;
 
 import javax.inject.Singleton;
@@ -38,7 +39,7 @@ public class RestApiModule {
 
     @Provides
     @Singleton
-    public StudentManager provideUserManager(StudentApiInterface githubApiService) {
-        return new StudentManager(githubApiService);
+    public StudentManager provideUserManager(StudentApiInterface githubApiService, DbModule dbModule) {
+        return new StudentManager(githubApiService, dbModule);
     }
 }

@@ -1,7 +1,10 @@
 package com.example.medvedomg.ddatest.data.api;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.medvedomg.ddatest.data.db.DbModule;
 import com.example.medvedomg.ddatest.data.model.Student;
 import com.example.medvedomg.ddatest.data.model.StudentResponse;
 import com.example.medvedomg.ddatest.ui.activity.MainActivity;
@@ -9,6 +12,10 @@ import com.example.medvedomg.ddatest.ui.activity.MainActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,6 +24,7 @@ import retrofit2.Response;
  * Created by medvedomg on 05.01.17.
  */
 
+
 public class StudentManager {
 
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -24,14 +32,19 @@ public class StudentManager {
     private StudentApiInterface studentApiInterface;
     private Student student;
 
-    private List<Student> students;
+    private List<Student> students = new ArrayList<>();
     private Call<List<Student>> call;
+    private DbModule dbHelper;
 
-    public StudentManager(StudentApiInterface studentApiInterface) {
+    @Singleton
+    public StudentManager(StudentApiInterface studentApiInterface, DbModule db) {
+        this.dbHelper = db;
         this.studentApiInterface = studentApiInterface;
+        getStudentList();
     }
 
     public List<Student> getStudentList() {
+
         Log.d(TAG, "getStudentList()");
         call = studentApiInterface.getStudentList();
         call.enqueue(new Callback<List<Student>>() {
@@ -42,6 +55,7 @@ public class StudentManager {
 
                 students = response.body();
                 Log.d("TAG", "response.body().get(3).getFirstName() " + response.body().get(3).getFirstName());
+                startInsertInDB(students);
             }
 
             @Override
@@ -49,9 +63,23 @@ public class StudentManager {
                 Log.d(TAG, "onFailure()");
             }
         });
-//        Log.d(TAG, students.size() + "");
         return students;
     }
 
+    private void startInsertInDB(List<Student> students) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        new AsyncTask<List<Student>, Void, Void>() {
+            @Override
+            protected Void doInBackground(List<Student>... params) {
+                dbHelper.insertAllData(params[0]);
+                return null;
+            }
+        }.execute(students);
 
+    }
+
+
+    public List<Student> getRealStudentList() {
+        return students;
+    }
 }
