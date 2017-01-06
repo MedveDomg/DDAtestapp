@@ -3,7 +3,6 @@ package com.example.medvedomg.ddatest.data.api;
 
 
 import com.example.medvedomg.ddatest.data.model.Student;
-import com.example.medvedomg.ddatest.data.model.StudentResponse;
 
 import java.util.List;
 

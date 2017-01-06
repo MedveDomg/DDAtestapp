@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.example.medvedomg.ddatest.data.db.DbModule;
 import com.example.medvedomg.ddatest.data.model.Student;
-import com.example.medvedomg.ddatest.data.model.StudentResponse;
 import com.example.medvedomg.ddatest.ui.activity.MainActivity;
 
 import java.util.ArrayList;
@@ -14,8 +13,6 @@ import java.util.List;
 
 import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.Provides;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,11 +37,10 @@ public class StudentManager {
     public StudentManager(StudentApiInterface studentApiInterface, DbModule db) {
         this.dbHelper = db;
         this.studentApiInterface = studentApiInterface;
-        getStudentList();
+//        getStudentList();
     }
 
     public List<Student> getStudentList() {
-
         Log.d(TAG, "getStudentList()");
         call = studentApiInterface.getStudentList();
         call.enqueue(new Callback<List<Student>>() {
@@ -75,11 +71,10 @@ public class StudentManager {
                 return null;
             }
         }.execute(students);
-
     }
 
 
-    public List<Student> getRealStudentList() {
-        return students;
+    public List<Student> getTwentyStudents() {
+        return dbHelper.getTwentyStudents();
     }
 }

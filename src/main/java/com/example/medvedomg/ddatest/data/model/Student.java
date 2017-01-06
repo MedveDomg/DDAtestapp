@@ -44,5 +44,26 @@ public class Student {
     public ArrayList<Course> getCourses() {
         return courses;
     }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setBirthday(int birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setCourses(ArrayList<Course> courses) {
+        this.courses = courses;
+    }
 }
+
 
