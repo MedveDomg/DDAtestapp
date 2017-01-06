@@ -3,6 +3,11 @@ package com.example.medvedomg.ddatest.ui.activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.medvedomg.ddatest.App;
 import com.example.medvedomg.ddatest.R;
@@ -11,6 +16,8 @@ import com.example.medvedomg.ddatest.data.api.StudentManager;
 import com.example.medvedomg.ddatest.data.db.DbModule;
 import com.example.medvedomg.ddatest.data.model.Student;
 import com.example.medvedomg.ddatest.ui.component.DaggerMainActivityComponent;
+import com.example.medvedomg.ddatest.ui.module.MainActivityModule;
+import com.example.medvedomg.ddatest.ui.presenter.MainPresenter;
 
 import java.util.List;
 
@@ -22,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject
     StudentManager studentManager;
+
+    @Inject
+    LinearLayoutManager linearLayoutManager;
+
+    @Inject
+    MainPresenter mainPresenter;
+
+
 
 
     private StudentApiInterface studentApiInterface;
@@ -37,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
         DaggerMainActivityComponent.builder()
                 .appComponent(((App) getApplicationContext()).getAppComponent())
+                .mainActivityModule(new MainActivityModule(this))
                 .build()
                 .inject(this);
 
-        studentManager.getTwentyStudents();
+//        studentManager.getTwentyStudents();
+
+
 //        while (students == null) {
 //            students = studentManager.getRealStudentList();
 //        }
@@ -53,5 +71,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_filter:
+
+                Toast.makeText(MainActivity.this, "WAZUP", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
+    }
 }

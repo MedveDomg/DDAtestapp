@@ -36,7 +36,7 @@ public class StudentManager {
     @Singleton
     public StudentManager(StudentApiInterface studentApiInterface, DbModule db) {
         this.dbHelper = db;
-        this.studentApiInterface = studentApiInterface;
+//        this.studentApiInterface = studentApiInterface;
 //        getStudentList();
     }
 
