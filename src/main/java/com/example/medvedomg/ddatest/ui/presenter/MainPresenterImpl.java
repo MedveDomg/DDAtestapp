@@ -30,9 +30,9 @@ public class MainPresenterImpl implements MainPresenter,DbModel.ResultListener{
     }
 
     @Override
-    public void loadStudents() {
+    public void loadStudents(String offset) {
 //       studentManager.getTwentyStudents(dbModule, this);
-        dbModule.getTwentyStudents(dbModule, this);
+        dbModule.getTwentyStudents(dbModule, this, offset);
     }
 
     @Override
@@ -45,6 +45,10 @@ public class MainPresenterImpl implements MainPresenter,DbModel.ResultListener{
 
     }
 
+    @Override
+    public void loadFilterStudents(String offset, String course, String mark) {
+        dbModule.getTwentyFilterStudents(dbModule,this,offset, course, mark);
+    }
 
 
     @Override

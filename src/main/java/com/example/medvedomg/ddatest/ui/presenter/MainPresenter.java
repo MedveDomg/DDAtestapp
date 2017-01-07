@@ -6,10 +6,11 @@ package com.example.medvedomg.ddatest.ui.presenter;
 
 public interface MainPresenter{
 
-    void loadStudents();
+    void loadStudents(String offset);
 
     void loadStudentCourse();
 
     void filterStudents();
 
+    void loadFilterStudents(String offset, String course, String mark);
 }

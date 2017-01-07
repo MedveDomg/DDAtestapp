@@ -10,7 +10,9 @@ import java.util.List;
  */
 
 public interface DbModel {
-    void getTwentyStudents(DbModule dbModule, ResultListener listener);
+    void getTwentyStudents(DbModule dbModule, ResultListener listener, String offset);
+
+    void getTwentyFilterStudents(DbModule dbModule, ResultListener listener, String offset, String course, String mark);
 
     interface ResultListener {
         void OnSucces(List<Student> list);

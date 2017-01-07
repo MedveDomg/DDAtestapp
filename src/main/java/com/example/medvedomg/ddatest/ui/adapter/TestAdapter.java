@@ -59,14 +59,10 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestViewHolder
 
     @Override
     public void onBindViewHolder(final TestViewHolder holder, int position) {
-        holder.tvName.setText(studentList.get(position).getFirstName() + " " + studentList.get(position).getFirstName());
+        holder.tvName.setText(studentList.get(position).getFirstName() + " " + studentList.get(position).getLastName());
         holder.tvBirthday.setText(Integer.toOctalString(studentList.get(position).getBirthday()));
         Log.d(TAG, "position " + position);
         courses = studentList.get(position).getCourses();
-        Log.d(TAG, courses.get(0).getMark()+"");
-        Log.d(TAG, courses.get(1).getMark()+"");
-        Log.d(TAG, courses.get(2).getMark()+"");
-        Log.d(TAG, courses.get(3).getMark()+"");
 
         holder.imgInfo.setOnClickListener(new View.OnClickListener() {
             @Override
