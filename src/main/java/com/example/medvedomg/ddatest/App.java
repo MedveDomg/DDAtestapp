@@ -3,6 +3,7 @@ package com.example.medvedomg.ddatest;
 import android.app.Application;
 
 import com.example.medvedomg.ddatest.data.api.RestApiModule;
+import com.example.medvedomg.ddatest.data.api.StudentManager;
 import com.example.medvedomg.ddatest.data.db.DbModule;
 
 /**
@@ -18,7 +19,6 @@ public class App extends Application{
         super.onCreate();
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
-                .dbModule(new DbModule(this))
                 .restApiModule(new RestApiModule())
                 .build();
     }

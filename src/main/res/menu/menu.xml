@@ -4,9 +4,9 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_filter"
-        android:icon="@drawable/filter2"
+        android:icon="@drawable/filter"
         app:showAsAction="always|collapseActionView"
         android:title="filter" />
 
-
+<!--<a href="https://icons8.com/web-app/30818/Filter">Filter icon credits</a>-->
 </menu>

@@ -16,7 +16,7 @@ import dagger.Component;
  * y medvedomg on 05.01.17.
  */
 @Singleton
-@Component(modules = {AppModule.class, DbModule.class, RestApiModule.class})
+@Component(modules = {AppModule.class, RestApiModule.class})
 public interface AppComponent {
 
     Application application();

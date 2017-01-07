@@ -1,15 +1,16 @@
 package com.example.medvedomg.ddatest.data.api;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.medvedomg.ddatest.data.db.DbModule;
 import com.example.medvedomg.ddatest.data.model.Student;
-import com.example.medvedomg.ddatest.ui.activity.MainActivity;
+import com.example.medvedomg.ddatest.ui.activity.MainActivityImpl;
+import com.example.medvedomg.ddatest.ui.presenter.MainPresenterImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Singleton;
 
@@ -22,26 +23,27 @@ import retrofit2.Response;
  */
 
 
-public class StudentManager {
+public class StudentManager implements StudentManagerModel{
 
-    public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = StudentManager.class.getSimpleName();
 
     private StudentApiInterface studentApiInterface;
     private Student student;
 
     private List<Student> students = new ArrayList<>();
     private Call<List<Student>> call;
-    private DbModule dbHelper;
+    private DbModule dbModule;
+
 
     @Singleton
-    public StudentManager(StudentApiInterface studentApiInterface, DbModule db) {
-        this.dbHelper = db;
-//        this.studentApiInterface = studentApiInterface;
+    public StudentManager(StudentApiInterface studentApiInterface) {
+        this.studentApiInterface = studentApiInterface;
 //        getStudentList();
     }
 
-    public List<Student> getStudentList() {
+    public List<Student> getStudentList(final DbModule dbModule) {
         Log.d(TAG, "getStudentList()");
+        this.dbModule = dbModule;
         call = studentApiInterface.getStudentList();
         call.enqueue(new Callback<List<Student>>() {
             @Override
@@ -51,7 +53,7 @@ public class StudentManager {
 
                 students = response.body();
                 Log.d("TAG", "response.body().get(3).getFirstName() " + response.body().get(3).getFirstName());
-                startInsertInDB(students);
+                startInsertInDB(students, dbModule);
             }
 
             @Override
@@ -62,19 +64,25 @@ public class StudentManager {
         return students;
     }
 
-    private void startInsertInDB(List<Student> students) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+    private void startInsertInDB(List<Student> students, final DbModule dbModule) {
+//        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
         new AsyncTask<List<Student>, Void, Void>() {
             @Override
             protected Void doInBackground(List<Student>... params) {
-                dbHelper.insertAllData(params[0]);
+                dbModule.insertAllData(params[0]);
                 return null;
             }
         }.execute(students);
     }
 
+//
 
-    public List<Student> getTwentyStudents() {
-        return dbHelper.getTwentyStudents();
+
+    @Override
+    public void getTwentyStudents(DbModule dbModule, final ResultListener listener) {
+
+
+
     }
 }

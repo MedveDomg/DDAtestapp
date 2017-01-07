@@ -4,7 +4,7 @@
     android:orientation="vertical"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
         android:id="@+id/card_rv"
         android:layout_marginTop="8dp"
@@ -18,13 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="60dp">
             <ImageView
-                android:id="@+id/image_rv"
+                android:id="@+id/image_rv_human"
+                android:layout_marginLeft="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/ic_human_card" />
             <RelativeLayout
+                android:layout_toRightOf="@id/image_rv_human"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true">
@@ -34,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorBlack"
                     android:textSize="16sp"
-                    android:layout_marginLeft="56dp"
+                    android:layout_marginLeft="16dp"
                     tools:text="Vadym Zhdanov" />
 
                 <TextView
@@ -44,15 +46,16 @@
                     android:textSize="14sp"
                     android:layout_below="@id/tv_rv_name"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="56dp"
+                    android:layout_marginLeft="16dp"
                     tools:text="09.06.1996"
                     />
             </RelativeLayout>
 
             <ImageView
+                android:id="@+id/img_rv_extra_information"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:layout_marginRight="16dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:src="@mipmap/ic_extra_information"

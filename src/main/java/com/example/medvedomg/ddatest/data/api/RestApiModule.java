@@ -39,7 +39,13 @@ public class RestApiModule {
 
     @Provides
     @Singleton
-    public StudentManager provideUserManager(StudentApiInterface githubApiService, DbModule dbModule) {
-        return new StudentManager(githubApiService, dbModule);
+    public StudentManager provideUserManager(StudentApiInterface githubApiService) {
+        return new StudentManager(githubApiService);
+    }
+
+    @Singleton
+    @Provides
+    DbModule provideDb(Application application, StudentManager manager) {
+        return new DbModule(application, manager);
     }
 }

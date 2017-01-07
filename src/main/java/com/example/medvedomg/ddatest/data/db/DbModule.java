@@ -1,6 +1,5 @@
 package com.example.medvedomg.ddatest.data.db;
 
-import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,23 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.medvedomg.ddatest.data.api.StudentManager;
 import com.example.medvedomg.ddatest.data.model.Course;
 import com.example.medvedomg.ddatest.data.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-
 /**
  * Created by medvedomg on 05.01.17.
  */
-@Module
-public class DbModule extends SQLiteOpenHelper{
-    public static final String TAG = Class.class.getSimpleName();
+public class DbModule extends SQLiteOpenHelper implements DbModel{
+    public static final String TAG = DbModule.class.getSimpleName();
 
     private static final String DB_NAME = "TestDb";
     private static final int DB_VERSION = 1;
@@ -81,13 +75,18 @@ public class DbModule extends SQLiteOpenHelper{
     private String name;
     private String firstName;
     private String lastName;
+    private StudentManager manager;
+    private int birthday;
+    private Course course1;
+    private ArrayList<Course> courseList;
 
-    public DbModule(Context mContext) {
+    public DbModule(Context mContext, StudentManager manager) {
 
         super(mContext, DB_NAME, null, 1);
 
         Log.d(TAG, "DbModule onCreate()");
         this.mContext = mContext;
+        this.manager = manager;
 //        mDbHelper = new HelperModule(mContext);
     }
 
@@ -97,8 +96,7 @@ public class DbModule extends SQLiteOpenHelper{
         database.execSQL(DB_CREATE_COURSE_TABLE);
         mDb = database;
 
-
-
+        manager.getStudentList(this);
 //        for (int i = 0; i < 10; i++) {
 //            database.insert(DB_TABLE_MAIN, null, cv);
 //            Log.d(TAG, "inserted bitmap arrays");
@@ -131,53 +129,71 @@ public class DbModule extends SQLiteOpenHelper{
         }
     }
 
-    public List<Student> getTwentyStudents() {
-        student = new Student();
-        ArrayList<Course> course = new ArrayList<>();
-        Course course1 = new Course();
+
+
+
+
+
+    @Override
+    public void getTwentyStudents(DbModule dbModule, ResultListener listener) {
+
+
+
         db = this.getWritableDatabase();
-            cursorMainTable = db.query(DB_TABLE_MAIN, null, null, null, null, null, null, String.valueOf(21));
-//        cursorMainTable = db.rawQuery("SELECT * FROM testtab limit ?", new String[]{"20"});
-//        cursorCourseTable = db.rawQuery("SELECT _id, coursename, mark FROM testtabcourse WHERE testtabcourse.studentid = + " + a + "");
-//        Log.d(TAG, "check cursorMainTable.moveToFirst()" + cursorMainTable.moveToFirst());
+        cursorMainTable = db.query(DB_TABLE_MAIN, null, null, null, null, null, null, String.valueOf(21));
         if (cursorMainTable != null) {
-//            Log.d(TAG, "check cursorMainTable.moveToFirst()" + cursorMainTable.moveToFirst());
-//            cursorMainTable.moveToFirst();
-                while(cursorMainTable.moveToNext()) {
-                    customId = cursorMainTable.getString(cursorMainTable.getColumnIndex(COLUMN_CUSTOM_ID));
-                    student.setId(customId);
-                    Log.d(TAG, "students customId " + customId);
+            while(cursorMainTable.moveToNext()) {
+                courseList = new ArrayList<>();
+                courseList.clear();
+                student = new Student();
+                customId = cursorMainTable.getString(cursorMainTable.getColumnIndex(COLUMN_CUSTOM_ID));
+                student.setId(customId);
+                Log.d(TAG, "students customId " + customId);
 
-                    firstName = cursorMainTable.getString(cursorMainTable.getColumnIndex(COLUMN_FIRST_NAME));
-                    student.setFirstName(firstName);
+                firstName = cursorMainTable.getString(cursorMainTable.getColumnIndex(COLUMN_FIRST_NAME));
+                student.setFirstName(firstName);
 
-                    lastName = cursorMainTable.getString(cursorMainTable.getColumnIndex(COLUMN_LAST_NAME));
-                    student.setLastName(lastName);
+                lastName = cursorMainTable.getString(cursorMainTable.getColumnIndex(COLUMN_LAST_NAME));
+                student.setLastName(lastName);
 
-                    student.setCourses(course);
-                    cursorCourseTable = db.rawQuery("SELECT _id, coursename, mark FROM testtabcourse WHERE testtabcourse.studentid = ?", new String[]{customId});
-                    course.clear();
-//                    cursorCourseTable.moveToFirst();
-//                    if (cursorCourseTable.moveToFirst()) {
-                    if(cursorCourseTable != null){
-                        while (cursorCourseTable.moveToNext()) {
-                            mark = cursorCourseTable.getInt(cursorCourseTable.getColumnIndex(COLUMN_MARK));
-                            name = cursorCourseTable.getString(cursorCourseTable.getColumnIndex(COLUMN_COURSE_NAME));
-                            course1.setMark(mark);
-                            course1.setName(name);
-                            course.add(course1);
-                            Log.d(TAG, student.getFirstName() + " " + mark + " " + name);
-                        }
-                        Log.d(TAG, "course.size() " + course.size());
+                birthday = cursorMainTable.getInt(cursorMainTable.getColumnIndex(COLUMN_BIRTHDAY));
+                student.setBirthday(birthday);
+                Log.d(TAG, "birthday " + birthday);
+
+                student.setCourses(courseList);
+                cursorCourseTable = db.rawQuery("SELECT _id, coursename, mark FROM testtabcourse WHERE testtabcourse.studentid = ?", new String[]{customId});
+                if(cursorCourseTable != null){
+
+                    while (cursorCourseTable.moveToNext()) {
+
+                        course1 = new Course();
+                        mark = cursorCourseTable.getInt(cursorCourseTable.getColumnIndex(COLUMN_MARK));
+                        Log.d(TAG, "TAKE MARK " + mark);
+                        name = cursorCourseTable.getString(cursorCourseTable.getColumnIndex(COLUMN_COURSE_NAME));
+                        Log.d(TAG, "TAKE NAME " + name);
+                        course1.setMark(mark);
+                        course1.setName(name);
+                        courseList.add(course1);
+                        Log.d(TAG, student.getFirstName());
                     }
+                    Log.d(TAG, "courseList.size() " + courseList.size());
                 }
+                ;
+                Log.d(TAG, courseList.get(0).getMark() + "");
+                Log.d(TAG, courseList.get(1).getMark() + "");
+                Log.d(TAG, courseList.get(2).getMark() + "");
+                Log.d(TAG, courseList.get(3).getMark() + "");
+                student.setCourses(courseList);
+                studentList.add(student);
+                Log.d(TAG,  "--------------------------");
+                Log.d(TAG, student.getCourses().get(0).getMark() + "");
+                Log.d(TAG, student.getCourses().get(1).getMark() + "");
+                Log.d(TAG, student.getCourses().get(2).getMark() + "");
+                Log.d(TAG, student.getCourses().get(3).getMark() + "");
+//                Log.d(TAG, "student get mark", student.getCourses().get(1).getMark() + "");
             }
-        return studentList;
-    }
-
-    @Singleton
-    @Provides
-    DbModule provideDb(Application application) {
-        return new DbModule(application);
+        }
+        Log.d(TAG, "studentList.size() in DbModule " + studentList.size());
+        listener.OnSucces(studentList);
     }
 }
