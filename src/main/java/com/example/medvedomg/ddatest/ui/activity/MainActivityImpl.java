@@ -87,7 +87,6 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
 
         SQLiteDatabase db = dbModule.getWritableDatabase();
 
-        dbModule.getTwentyStudents();
         rvMain.setAdapter(adapter);
 
         rvMain.setLayoutManager(linearLayoutManager);
@@ -104,21 +103,15 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
         };
         rvMain.setOnScrollListener(scrollListener);
 
-
         Bundle bundle = new Bundle();
-        getLoaderManager().initLoader(228, null, this);
-        getLoaderManager().getLoader(228).forceLoad();
 
         Toast.makeText(this,"Loading", Toast.LENGTH_LONG).show();
+
         mainPresenter.loadStudents("0");
-//        studentManager.getTwentyStudents();
     }
 
     private void loadMoreStudents(String offset) {
-
-
                 mainPresenter.loadStudents(offset);
-
     }
 
     private void loadFilterStudents(String offset, String course, String mark) {
@@ -127,6 +120,7 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
         MARK = mark;
         COURSE = course;
         Log.d(TAG, "STATIC MARK " + MARK + " " + "STATIC COURSE " + COURSE);
+
         mainPresenter.loadFilterStudents(offset,course,mark);
     }
 
@@ -141,8 +135,6 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter:
-
-//                Toast.makeText(MainActivityImpl.this, "WAZUP", Toast.LENGTH_SHORT).show();
 
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivityImpl.this);
                 builder1.setMessage("Filters");
@@ -191,15 +183,6 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
     public void setStudents(List<Student> list) {
         Log.d(TAG, "List<Student> list.size() " + list.size());
         adapter.setStudents(list);
-        Log.d(TAG, "getMark() " + list.get(0).getCourses().get(0).getMark());
-        Log.d(TAG, "getMark() " + list.get(0).getCourses().get(1).getMark());
-        Log.d(TAG, "getMark() " + list.get(0).getCourses().get(2).getMark());
-        Log.d(TAG, "getMark() " + list.get(0).getCourses().get(3).getMark());
-        Log.d(TAG, "++++++++++");
-        Log.d(TAG, "getMark() " + list.get(0).getCourses().get(0).getMark());
-        Log.d(TAG, "getMark() " + list.get(1).getCourses().get(1).getMark());
-        Log.d(TAG, "getMark() " + list.get(2).getCourses().get(2).getMark());
-        Log.d(TAG, "getMark() " + list.get(3).getCourses().get(3).getMark());
     }
 
     @Override
@@ -232,7 +215,7 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        return new MyCursorLoader(this, dbModule);
+        return null;
     }
 
     @Override

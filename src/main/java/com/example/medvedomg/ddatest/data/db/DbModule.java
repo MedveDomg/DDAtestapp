@@ -90,7 +90,6 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
         Log.d(TAG, "DbModule onCreate()");
         this.mContext = mContext;
         this.manager = manager;
-//        mDbHelper = new HelperModule(mContext);
     }
 
     @Override
@@ -100,10 +99,6 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
         mDb = database;
 
         manager.getStudentList(this);
-//        for (int i = 0; i < 10; i++) {
-//            database.insert(DB_TABLE_MAIN, null, cv);
-//            Log.d(TAG, "inserted bitmap arrays");
-//        }
     }
 
     @Override
@@ -112,8 +107,6 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
 
     public void insertAllData(List<Student> studentList) {
         cv.clear();
-//        Log.d(TAG, "studentList.size() + " + studentList.size());
-//        studentList.size();
         db = this.getWritableDatabase();
         for (Student student : studentList) {
             cv.put(COLUMN_CUSTOM_ID, student.getId());
@@ -143,7 +136,6 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
 
 
         db = this.getWritableDatabase();
-//        cursorMainTable = db.query(DB_TABLE_MAIN, null, null, null, null, null, null, String.valueOf(21));
         cursorMainTable = db.rawQuery("select * from (select * from testtab order by _id ASC limit 20 offset ?) order by _id ASC", new String[]{offset});
         if (cursorMainTable != null) {
             while(cursorMainTable.moveToNext()) {
@@ -182,19 +174,9 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
                     }
                     Log.d(TAG, "courseList.size() " + courseList.size());
                 }
-                ;
-                Log.d(TAG, courseList.get(0).getMark() + "");
-                Log.d(TAG, courseList.get(1).getMark() + "");
-                Log.d(TAG, courseList.get(2).getMark() + "");
-                Log.d(TAG, courseList.get(3).getMark() + "");
                 student.setCourses(courseList);
                 studentList.add(student);
-                Log.d(TAG,  "--------------------------");
-                Log.d(TAG, student.getCourses().get(0).getMark() + "");
-                Log.d(TAG, student.getCourses().get(1).getMark() + "");
-                Log.d(TAG, student.getCourses().get(2).getMark() + "");
-                Log.d(TAG, student.getCourses().get(3).getMark() + "");
-//                Log.d(TAG, "student get mark", student.getCourses().get(1).getMark() + "");
+
             }
         }
         Log.d(TAG, "studentList.size() in DbModule " + studentList.size());
@@ -205,16 +187,7 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
     public void getTwentyFilterStudents(DbModule dbModule, ResultListener listener, String offset, String course, String markFilter) {
         db = this.getWritableDatabase();
         studentList.clear();
-//        cursorMainTable = db.query(DB_TABLE_MAIN, null, null, null, null, null, null, String.valueOf(21));
         cursorMainTable = db.rawQuery("SELECT * FROM testtab JOIN testtabcourse ON testtabcourse.coursename = ? AND testtabcourse.mark = ? AND testtab.customid = testtabcourse.studentid ORDER BY _id ASC LIMIT 20 OFFSET ?", new String[]{course, markFilter, offset});
-//        cursorMainTable = db.rawQuery("SELECT * FROM testtab \n" +
-//                "JOIN testtabcourse ON\n" +
-//                "testtabcourse.coursename = ? \n" +
-//                "AND testtabcourse.mark = ?\n" +
-//                "AND testtab.customid = testtabcourse.studentid\n" +
-//                "ORDER BY _id \n" +
-//                "ASC LIMIT 20 \n" +
-//                "OFFSET ?", new String[]{course,markFilter,offset});
         if (cursorMainTable != null) {
             while(cursorMainTable.moveToNext()) {
                 courseList = new ArrayList<>();
@@ -237,9 +210,7 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
                 student.setCourses(courseList);
                 cursorCourseTable = db.rawQuery("SELECT _id, coursename, mark FROM testtabcourse WHERE testtabcourse.studentid = ?", new String[]{customId});
                 if(cursorCourseTable != null){
-
                     while (cursorCourseTable.moveToNext()) {
-
                         course1 = new Course();
                         mark = cursorCourseTable.getInt(cursorCourseTable.getColumnIndex(COLUMN_MARK));
                         Log.d(TAG, "TAKE MARK " + mark);
@@ -251,20 +222,10 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
                         Log.d(TAG, student.getFirstName());
                     }
                     Log.d(TAG, "courseList.size() " + courseList.size());
+                    Log.d(TAG, "courseList.size() " + courseList.size());
                 }
-                ;
-                Log.d(TAG, courseList.get(0).getMark() + "");
-                Log.d(TAG, courseList.get(1).getMark() + "");
-                Log.d(TAG, courseList.get(2).getMark() + "");
-                Log.d(TAG, courseList.get(3).getMark() + "");
                 student.setCourses(courseList);
                 studentList.add(student);
-                Log.d(TAG,  "--------------------------");
-                Log.d(TAG, student.getCourses().get(0).getMark() + "");
-                Log.d(TAG, student.getCourses().get(1).getMark() + "");
-                Log.d(TAG, student.getCourses().get(2).getMark() + "");
-                Log.d(TAG, student.getCourses().get(3).getMark() + "");
-//                Log.d(TAG, "student get mark", student.getCourses().get(1).getMark() + "");
             }
         }
         Log.d(TAG, "studentList.size() in DbModule " + studentList.size());

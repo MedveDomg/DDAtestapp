@@ -53,7 +53,6 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.DialogView
 
     @Override
     public void onBindViewHolder(DialogAdapter.DialogViewHolder holder, int position) {
-        //names.get(position)+ marks.get(position).intValue()+
         holder.tvCourse.setText(names.get(position).toString());
         holder.btnMark.setText(marks.get(position).intValue()+"");
     }

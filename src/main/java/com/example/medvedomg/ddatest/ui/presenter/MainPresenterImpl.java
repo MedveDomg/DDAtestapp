@@ -31,7 +31,6 @@ public class MainPresenterImpl implements MainPresenter,DbModel.ResultListener{
 
     @Override
     public void loadStudents(String offset) {
-//       studentManager.getTwentyStudents(dbModule, this);
         dbModule.getTwentyStudents(dbModule, this, offset);
     }
 
@@ -56,9 +55,4 @@ public class MainPresenterImpl implements MainPresenter,DbModel.ResultListener{
         mainActivity.setStudents(list);
     }
 
-//    @Override
-//    public void OnSucces(List<Student> studentList) {
-//        mainActivity.setStudents(studentList);
-//
-//    }
 }

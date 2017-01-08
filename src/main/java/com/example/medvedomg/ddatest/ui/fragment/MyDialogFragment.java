@@ -1,6 +1,7 @@
 package com.example.medvedomg.ddatest.ui.fragment;
 
 import android.content.DialogInterface;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -31,7 +32,6 @@ public class MyDialogFragment extends DialogFragment implements View.OnClickList
     private LinearLayoutManager linearLayoutManager;
     private int mark = 0;
     float divide = 0;
-    // this method create view for your Dialog
 
 
     @Override
@@ -46,25 +46,22 @@ public class MyDialogFragment extends DialogFragment implements View.OnClickList
             divide = ((float) divide + markCount);
         }
         divide = divide / marks.size();
+        Log.d("TAG", divide+"");
         dialogAdapter = new DialogAdapter(names, marks ,getActivity());
         linearLayoutManager = new LinearLayoutManager(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //inflate layout with recycler view
         View v = inflater.inflate(R.layout.fragment_dialog, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.rv_dialog);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(dialogAdapter);
         mRecyclerView.setHasFixedSize(true);
-        //setadapter
-//        DialogAdapter adapter = new DialogAdapter(savedInstanceState.getParcelableArrayList("list"));
         tvAverageMark = (TextView) v.findViewById(R.id.tv_dialog_mark);
         tvAverageMark.setText("Average mark: " + divide);
         Button button = (Button) v.findViewById(R.id.btn_dialog_ok);
         button.setOnClickListener(this);
-        //get your recycler view and populate it.
         return v;
     }
 
