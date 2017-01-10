@@ -28,6 +28,7 @@ import com.example.medvedomg.ddatest.App;
 import com.example.medvedomg.ddatest.R;
 import com.example.medvedomg.ddatest.data.api.StudentApiInterface;
 import com.example.medvedomg.ddatest.data.api.StudentManager;
+import com.example.medvedomg.ddatest.data.db.DbModel;
 import com.example.medvedomg.ddatest.data.db.DbModule;
 import com.example.medvedomg.ddatest.data.model.Course;
 import com.example.medvedomg.ddatest.data.model.Student;
@@ -44,7 +45,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivityImpl extends AppCompatActivity implements MainView, LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivityImpl extends AppCompatActivity implements MainView, LoaderManager.LoaderCallbacks<Cursor>, DbModel.ResultListener{
 
     public static final String TAG = MainActivityImpl.class.getSimpleName();
 
@@ -84,9 +85,10 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
                 .mainActivityModule(new MainActivityModule(this))
                 .build()
                 .inject(this);
+        DbModule dbModule1 = new DbModule(this);
 
-        SQLiteDatabase db = dbModule.getWritableDatabase();
-
+        SQLiteDatabase db1 = dbModule1.getWritableDatabase();
+        studentManager.getStudentList(dbModule);
         rvMain.setAdapter(adapter);
 
         rvMain.setLayoutManager(linearLayoutManager);
@@ -107,6 +109,9 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
 
         Toast.makeText(this,"Loading", Toast.LENGTH_LONG).show();
 
+    }
+
+    public void loadFirstItems() {
         mainPresenter.loadStudents("0");
     }
 
@@ -185,6 +190,18 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
         adapter.setStudents(list);
     }
 
+    public void setStudentsInMainActivity(List<Student> list) {
+        students = list;
+        notifyDb();
+    }
+
+    private void notifyDb() {
+        mainPresenter.askDbToInsertStudents(students);
+
+//        dbModule.insertAllData(students);
+    }
+
+
     @Override
     public void onFilterClick() {
 
@@ -225,6 +242,11 @@ public class MainActivityImpl extends AppCompatActivity implements MainView, Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    public void OnSucces(List<Student> list) {
 
     }
 }

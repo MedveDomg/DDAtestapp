@@ -37,15 +37,11 @@ public class RestApiModule {
         return restAdapter.create(StudentApiInterface.class);
     }
 
-    @Provides
-    @Singleton
-    public StudentManager provideUserManager(StudentApiInterface githubApiService) {
-        return new StudentManager(githubApiService);
-    }
+
 
     @Singleton
     @Provides
-    DbModule provideDb(Application application, StudentManager manager) {
-        return new DbModule(application, manager);
+    DbModule provideDb(Application application) {
+        return new DbModule(application);
     }
 }

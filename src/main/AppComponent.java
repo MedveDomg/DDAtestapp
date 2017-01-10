@@ -23,7 +23,6 @@ public interface AppComponent {
 
     DbModule db();
 
-    StudentManager manager();
 
     StudentApiInterface apiInterface();
 }

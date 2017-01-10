@@ -33,11 +33,13 @@ public class StudentManager implements StudentManagerModel{
     private List<Student> students = new ArrayList<>();
     private Call<List<Student>> call;
     private DbModule dbModule;
+    private MainActivityImpl mainActivity;
 
 
     @Singleton
-    public StudentManager(StudentApiInterface studentApiInterface) {
+    public StudentManager(StudentApiInterface studentApiInterface, MainActivityImpl mainActivity) {
         this.studentApiInterface = studentApiInterface;
+        this.mainActivity = mainActivity;
 //        getStudentList();
     }
 
@@ -53,7 +55,10 @@ public class StudentManager implements StudentManagerModel{
 
                 students = response.body();
                 Log.d("TAG", "response.body().get(3).getFirstName() " + response.body().get(3).getFirstName());
-                startInsertInDB(students, dbModule);
+//                startInsertInDB(students);
+//                dbModule.insertAllData(students);
+//                mainPresenter.setStudentInPresenter(students);
+                mainActivity.setStudentsInMainActivity(students);
             }
 
             @Override
@@ -64,16 +69,11 @@ public class StudentManager implements StudentManagerModel{
         return students;
     }
 
-    private void startInsertInDB(List<Student> students, final DbModule dbModule) {
+    private void startInsertInDB(List<Student> students) {
 //        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        new AsyncTask<List<Student>, Void, Void>() {
-            @Override
-            protected Void doInBackground(List<Student>... params) {
-                dbModule.insertAllData(params[0]);
-                return null;
-            }
-        }.execute(students);
+
+
     }
 
 //
@@ -84,5 +84,9 @@ public class StudentManager implements StudentManagerModel{
 
 
 
+    }
+
+    public void setFirstTwentyStudents() {
+            mainActivity.loadFirstItems();
     }
 }

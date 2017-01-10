@@ -7,6 +7,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -83,7 +84,7 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
     private Course course1;
     private ArrayList<Course> courseList;
 
-    public DbModule(Context mContext, StudentManager manager) {
+    public DbModule(Context mContext) {
 
         super(mContext, DB_NAME, null, 1);
 
@@ -98,31 +99,49 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
         database.execSQL(DB_CREATE_COURSE_TABLE);
         mDb = database;
 
-        manager.getStudentList(this);
+//        manager.getStudentList(this);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int i, int i1) {
     }
 
-    public void insertAllData(List<Student> studentList) {
+    public void insertAllData(final List<Student> studentList, final ResultListener resultListener) {
         cv.clear();
-        db = this.getWritableDatabase();
-        for (Student student : studentList) {
-            cv.put(COLUMN_CUSTOM_ID, student.getId());
-            cv.put(COLUMN_FIRST_NAME, student.getFirstName());
-            cv.put(COLUMN_LAST_NAME, student.getLastName());
-            cv.put(COLUMN_BIRTHDAY, student.getBirthday());
-            db.insert(DB_TABLE_MAIN, null, cv);
-            cv.clear();
-            for (int i = 0; i < student.getCourses().size(); i++) {
-                cv1.put(COLUMN_COURSE_STUDENT_ID,student.getId());
-                cv1.put(COLUMN_COURSE_NAME, student.getCourses().get(i).getName());
-                cv1.put(COLUMN_MARK, student.getCourses().get(i).getMark());
-                db.insert(DB_TABLE_COURSE, null, cv1);
+        new AsyncTask<List<Student>, List<Student>, Void>() {
+            @Override
+            protected Void doInBackground(List<Student>... params) {
+                db = DbModule.this.getWritableDatabase();
+                for (int i = 0; i < params[0].size(); i++) {
+                    if (i == 21) {
+                        publishProgress(studentList);
+                    }
+                    student = studentList.get(i);
+                    cv.put(COLUMN_CUSTOM_ID, student.getId());
+                    cv.put(COLUMN_FIRST_NAME, student.getFirstName());
+                    cv.put(COLUMN_LAST_NAME, student.getLastName());
+                    cv.put(COLUMN_BIRTHDAY, student.getBirthday());
+                    db.insert(DB_TABLE_MAIN, null, cv);
+                    cv.clear();
+                    for (int j = 0; j < student.getCourses().size(); j++) {
+                        cv1.put(COLUMN_COURSE_STUDENT_ID, student.getId());
+                        cv1.put(COLUMN_COURSE_NAME, student.getCourses().get(j).getName());
+                        cv1.put(COLUMN_MARK, student.getCourses().get(j).getMark());
+                        db.insert(DB_TABLE_COURSE, null, cv1);
+                    }
+                    Log.d(TAG, "inserted");
+                }
+                return null;
             }
-            Log.d(TAG, "inserted");
-        }
+
+            @Override
+            protected void onProgressUpdate(List<Student>... values) {
+                super.onProgressUpdate(values);
+                Log.d(TAG, "onProgressUpdate");
+                resultListener.OnSucces(values[0]);
+            }
+        }.execute(studentList);
+        Log.d(TAG, "observable student list" + studentList.size());
     }
 
 
@@ -180,6 +199,7 @@ public class DbModule extends SQLiteOpenHelper implements DbModel{
             }
         }
         Log.d(TAG, "studentList.size() in DbModule " + studentList.size());
+
         listener.OnSucces(studentList);
     }
 

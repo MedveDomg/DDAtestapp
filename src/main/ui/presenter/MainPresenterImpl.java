@@ -1,5 +1,7 @@
 package com.example.medvedomg.ddatest.ui.presenter;
 
+import android.util.Log;
+
 import com.example.medvedomg.ddatest.data.api.StudentManager;
 import com.example.medvedomg.ddatest.data.api.StudentManagerModel;
 import com.example.medvedomg.ddatest.data.db.DbModel;
@@ -52,7 +54,14 @@ public class MainPresenterImpl implements MainPresenter,DbModel.ResultListener{
 
     @Override
     public void OnSucces(List<Student> list) {
+
         mainActivity.setStudents(list);
+    }
+
+    public void askDbToInsertStudents(List<Student> list) {
+        Log.d(TAG, "askDBtoInsertStudents " + list.size());
+        dbModule.insertAllData(list, this);
+
     }
 
 }

@@ -3,12 +3,15 @@ package com.example.medvedomg.ddatest.ui.module;
 import android.app.Application;
 import android.support.v7.widget.LinearLayoutManager;
 
+import com.example.medvedomg.ddatest.data.api.StudentApiInterface;
 import com.example.medvedomg.ddatest.data.api.StudentManager;
 import com.example.medvedomg.ddatest.data.db.DbModule;
 import com.example.medvedomg.ddatest.ui.ActivityScope;
 import com.example.medvedomg.ddatest.ui.activity.MainActivityImpl;
 import com.example.medvedomg.ddatest.ui.adapter.TestAdapter;
 import com.example.medvedomg.ddatest.ui.presenter.MainPresenterImpl;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -41,6 +44,12 @@ public class MainActivityModule {
     @ActivityScope
     TestAdapter provideAdapter(MainActivityImpl mainActivity) {
         return new TestAdapter(mainActivity);
+    }
+
+    @Provides
+    @ActivityScope
+    public StudentManager provideUserManager(StudentApiInterface githubApiService, MainActivityImpl mainActivity) {
+        return new StudentManager(githubApiService, mainActivity);
     }
 
     @Provides
